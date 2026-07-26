@@ -118,7 +118,7 @@ static void LCD_1IN69_InitReg(void)
     LCD_1IN69_SendCommand(0x29);
 }
 
-static void LCD_1IN69_SetAttributes(UBYTE Scan_dir)
+static void LCD_1IN69_SetAttributes()
 {
     // Get the screen scan direction
     UBYTE MemoryAccessReg = 0x00;
@@ -131,30 +131,18 @@ static void LCD_1IN69_SetAttributes(UBYTE Scan_dir)
     LCD_1IN69_SendData_8Bit(MemoryAccessReg); // 0x08 set RGB
 }
 
-/********************************************************************************
-function :  Initialize the lcd
-parameter:
-********************************************************************************/
-void LCD_1IN69_Init(UBYTE Scan_dir)
+void LCD_1IN69_Init()
 {
     // Hardware reset
     LCD_1IN69_Reset();
 
     // Set the resolution and scanning method of the screen
-    LCD_1IN69_SetAttributes(Scan_dir);
+    LCD_1IN69_SetAttributes();
 
     // Set the initialization register
     LCD_1IN69_InitReg();
 }
 
-/********************************************************************************
-function:   Sets the start position and size of the display area
-parameter:
-        Xstart  :   X direction Start coordinates
-        Ystart  :   Y direction Start coordinates
-        Xend    :   X direction end coordinates
-        Yend    :   Y direction end coordinates
-********************************************************************************/
 void LCD_1IN69_SetWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
 {    
     // Scan dir is always vertical
@@ -175,30 +163,6 @@ void LCD_1IN69_SetWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
     LCD_1IN69_SendCommand(0x2C);   
 }
 
-/******************************************************************************
-function :  Clear screen
-parameter:
-******************************************************************************/
-void LCD_1IN69_Clear(UWORD Color)
-{
-    UWORD j;
-    UWORD Image[LCD_1IN69_WIDTH];
-    for (j=0; j<LCD_1IN69_WIDTH; j++) {
-        Image[j] = Color;
-    }
-
-    LCD_1IN69_SetWindows(0, 0, LCD_1IN69_WIDTH, LCD_1IN69_HEIGHT);
-    LCD_1IN69_DC_1;
-    for (j=0; j<LCD_1IN69_HEIGHT; j++) {
-        DEV_SPI_Write_nByte((uint8_t *)&Image, LCD_1IN69_WIDTH * 2);
-    }
-
-}
-
-/******************************************************************************
-function :  Sends the image buffer in RAM to displays
-parameter:
-******************************************************************************/
 void LCD_1IN69_Display(UWORD *Image)
 {
     UWORD j;
@@ -219,18 +183,4 @@ void LCD_1IN69_DisplayWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend
     for (j=0; j<Yend-Ystart; j++) {
         DEV_SPI_Write_nByte((uint8_t *)&Image[j * (Xend-Xstart)], (Xend-Xstart) * 2);
     }
-}
-
-void LCD_1IN69_DrawPoint(UWORD X, UWORD Y, UWORD Color)
-{
-    LCD_1IN69_SetWindows(X, Y, X, Y);
-    LCD_1IN69_SendData_16Bit(Color);
-}
-
-void Handler_1IN69_LCD(int signo)
-{
-    // System Exit
-    printf("\r\nHandler:Program stop\r\n");
-    DEV_ModuleExit();
-    exit(0);
 }

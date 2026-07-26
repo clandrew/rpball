@@ -5,7 +5,6 @@
 #include "DEV_Config.h"
 #include <stdint.h>
 
-#include <stdlib.h>     //itoa()
 #include <stdio.h>
 
 #define LCD_1IN69_HEIGHT 280
@@ -28,18 +27,15 @@
 #define LCD_1IN69_BL_0   LCD_BL_0    
 #define LCD_1IN69_BL_1   LCD_BL_1    
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void LCD_1IN69_Init(UBYTE Scan_dir);
+void LCD_1IN69_Init();
 void LCD_1IN69_Clear(UWORD Color);
 void LCD_1IN69_Display(UWORD *Image);
 void LCD_1IN69_DisplayWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD *Image);
 void LCD_1IN69_SetWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend);
-void LCD_1IN69_DrawPoint(UWORD X, UWORD Y, UWORD Color);
-void Handler_1IN69_LCD(int signo);
 
 #ifdef __cplusplus
 }

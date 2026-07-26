@@ -18,7 +18,7 @@ int ballColorIndex = 0;
 void setup() 
 {
   DEV_ModuleInit();
-  LCD_1IN69_Init(VERTICAL);
+  LCD_1IN69_Init();
 }
 
 static const UWORD colors[] = {RED, GREEN, BLUE };
