@@ -5,7 +5,7 @@ This is a graphical demo which runs on:
 
 # How It Looks
 
-![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/demo.png "Example image")
+<img src="https://raw.githubusercontent.com/clandrew/rpball/main/demo.png" width="300">
 
 ![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/demo.gif "Example image")
 
