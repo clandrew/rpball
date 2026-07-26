@@ -78,16 +78,9 @@ void DrawToStaging()
 
 void CopyStagingToScreen()
 {
-  uint8_t* rowStart = (uint8_t*)&gStaging;
-  int pitch = LCD_1IN69_WIDTH * 2;
-
-  LCD_1IN69_SetWindows(0, 0, LCD_1IN69.WIDTH, LCD_1IN69.HEIGHT);
-  LCD_1IN69_DC_1;
-  for (int j=0; j<LCD_1IN69.HEIGHT; j++) 
-  {
-    DEV_SPI_Write_nByte(rowStart, LCD_1IN69.WIDTH * 2);
-    rowStart += pitch;
-  }
+  LCD_1IN69_SetWindows(0, 0, LCD_1IN69_WIDTH, LCD_1IN69_HEIGHT);
+  DEV_Digital_Write(LCD_DC,1);
+  DEV_SPI_Write_nByte((uint8_t*)&gStaging, LCD_1IN69_WIDTH * LCD_1IN69_HEIGHT * 2);
 }
 
 // the loop function runs over and over again forever
