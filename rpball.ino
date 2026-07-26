@@ -1,6 +1,7 @@
 #include "DEV_Config.h"
 #include "LCD_1in69.h"
 
+// The color format is RGB565, bbbb bggg ggrr 
 #define WHITE       0xFFFF
 #define BLUE        0xF800
 #define GREEN       0x001F
