@@ -5,9 +5,9 @@ This is a graphical demo which runs on:
 
 # How It Looks
 
-![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/Images/demo.png "Example image")
+![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/demo.png "Example image")
 
-![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/Images/demo.gif "Example image")
+![Example image](https://raw.githubusercontent.com/clandrew/rpball/main/demo.gif "Example image")
 
 # Build
 The code is in C++, with some boilerplate pulled in based off of Raspberry Pi and WaveShare samples.
