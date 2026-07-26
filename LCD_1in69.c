@@ -1,58 +1,36 @@
 #include "LCD_1in69.h"
 #include "DEV_Config.h"
-
-#include <stdlib.h> //itoa()
-#include <stdio.h>
+#include "pico/stdlib.h" // For sleep_ms
 
 static void LCD_1IN69_Reset(void)
 {
     LCD_1IN69_RST_1;
-    DEV_Delay_ms(100);
+    sleep_ms(100);
     LCD_1IN69_RST_0;
-    DEV_Delay_ms(100);
+    sleep_ms(100);
     LCD_1IN69_RST_1;
-    DEV_Delay_ms(100);
+    sleep_ms(100);
 }
 
 static void LCD_1IN69_SendCommand(UBYTE Reg)
 {
     LCD_1IN69_DC_0;
-    // LCD_1IN69_CS_0;
     DEV_SPI_WriteByte(Reg);
-    //LCD_1IN69_CS_1;
 }
 
-/******************************************************************************
-function :  send data
-parameter:
-    Data : Write data
-******************************************************************************/
 static void LCD_1IN69_SendData_8Bit(UBYTE Data)
 {
     LCD_1IN69_DC_1;
-    //LCD_1IN69_CS_0;
     DEV_SPI_WriteByte(Data);
-    //LCD_1IN69_CS_1;
 }
 
-/******************************************************************************
-function :  send data
-parameter:
-    Data : Write data
-******************************************************************************/
 static void LCD_1IN69_SendData_16Bit(UWORD Data)
 {
     LCD_1IN69_DC_1;
-    // LCD_1IN69_CS_0;
     DEV_SPI_WriteByte((Data >> 8) & 0xFF);
     DEV_SPI_WriteByte(Data & 0xFF);
-    // LCD_1IN69_CS_1;
 }
 
-/******************************************************************************
-function :  Initialize the lcd register
-parameter:
-******************************************************************************/
 static void LCD_1IN69_InitReg(void)
 {
     LCD_1IN69_SendCommand(0x36);
@@ -136,7 +114,7 @@ static void LCD_1IN69_InitReg(void)
     LCD_1IN69_SendCommand(0x21);
 
     LCD_1IN69_SendCommand(0x11);
-    DEV_Delay_ms(120);
+    sleep_ms(120);
     LCD_1IN69_SendCommand(0x29);
 }
 

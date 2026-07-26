@@ -1,11 +1,11 @@
 #include "DEV_Config.h"
 #include "LCD_1in69.h"
 
-// The color format is RGB565, bbbb bggg ggrr 
+// The color format is RGB565. bbbb bxxx xxxx xxxx
 #define WHITE       0xFFFF
-#define BLUE        0xF800
-#define GREEN       0x001F
 #define RED         0x07E0
+#define GREEN       0x001F
+#define BLUE        0xF800
 
 UWORD gStaging[LCD_1IN69_WIDTH * LCD_1IN69_HEIGHT ];
 const int ballDiam = 50;
@@ -13,6 +13,7 @@ int ballX = 50;
 int ballY = 50;
 int ballVX = 5;
 int ballVY = 5;
+int ballColorIndex = 0;
 
 void setup() 
 {
@@ -20,30 +21,47 @@ void setup()
   LCD_1IN69_Init(VERTICAL);
 }
 
+static const UWORD colors[] = {RED, GREEN, BLUE };
+void IncrementBallColor()
+{
+  ballColorIndex = (ballColorIndex + 1) % count_of(colors);
+}
+
+UWORD GetBallColor()
+{
+  return colors[ballColorIndex];
+}
+
 void MoveBall()
 {
+  // Horizontal
   ballX += ballVX;
   if (ballX <= 0)
   {
     ballX = 0;
     ballVX = -ballVX;
+    IncrementBallColor();
   }
   if (ballX > LCD_1IN69_WIDTH-ballDiam-1)
   {
     ballX = LCD_1IN69_WIDTH-ballDiam-1;
     ballVX = -ballVX;
+    IncrementBallColor();
   }
   
+  // Vertical
   ballY += ballVY;
   if (ballY <= 0)
   {
     ballY = 0;
     ballVY = -ballVY;
+    IncrementBallColor();
   }
   if (ballY > LCD_1IN69_HEIGHT-ballDiam-1)
   {
     ballY = LCD_1IN69_HEIGHT-ballDiam-1;
     ballVY = -ballVY;
+    IncrementBallColor();
   }  
 }
 
@@ -55,7 +73,9 @@ void DrawToStaging()
     gStaging[i] = WHITE;
   }
 
-  // Draw a red ball
+  // Draw a colored ball
+  UWORD ballColor = GetBallColor();
+
   int centerX = (ballDiam / 2);
   int centerY = (ballDiam / 2);
   int ballRad = ballDiam / 2;
@@ -71,7 +91,7 @@ void DrawToStaging()
       {
         int screenX = ballX + x;
         int screenY = ballY + y;
-        gStaging[screenY*LCD_1IN69_WIDTH + screenX] = RED;
+        gStaging[screenY*LCD_1IN69_WIDTH + screenX] = ballColor;
       }
     }
   }

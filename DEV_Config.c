@@ -18,20 +18,10 @@ void DEV_Digital_Write(UWORD Pin, UBYTE Value)
     gpio_put(Pin, Value ? 1 : 0);
 }
 
-UBYTE DEV_Digital_Read(UWORD Pin)
-{
-    return gpio_get(Pin);
-}
-
 void DEV_GPIO_Mode(UWORD Pin, UWORD Mode)
 {
     gpio_init(Pin);
     gpio_set_dir(Pin, Mode == 0 ? GPIO_IN : GPIO_OUT);
-}
-
-void DEV_Delay_ms(UDOUBLE xms)
-{
-    sleep_ms(xms);
 }
 
 static void DEV_GPIO_Init(void)
