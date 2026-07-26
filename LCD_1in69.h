@@ -1,14 +1,4 @@
-/*****************************************************************************
-* | File        :   LCD_1in69.h
-* | Author      :   Waveshare team
-* | Function    :   Hardware underlying interface
-* | Info        :   Used to shield the underlying layers of each master and enhance portability
-*----------------
-* | This version:   V1.0
-* | Date        :   2023-03-09
-* | Info        :   Basic version
-*
-******************************************************************************/
+
 #ifndef __LCD_1IN69_H
 #define __LCD_1IN69_H   
     
@@ -38,18 +28,7 @@
 #define LCD_1IN69_BL_0   LCD_BL_0    
 #define LCD_1IN69_BL_1   LCD_BL_1    
 
-typedef struct{
-    UWORD WIDTH;
-    UWORD HEIGHT;
-    UBYTE SCAN_DIR;
-}LCD_1IN69_ATTRIBUTES;
-extern LCD_1IN69_ATTRIBUTES LCD_1IN69;
 
-/********************************************************************************
-function:   Macro definition variable name
-********************************************************************************/
-// extern "C" needed here too: these are defined in LCD_1in69.c (plain C) but
-// called from your .ino (C++) - see the matching note in DEV_Config.h.
 #ifdef __cplusplus
 extern "C" {
 #endif

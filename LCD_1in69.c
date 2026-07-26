@@ -1,26 +1,9 @@
-/*****************************************************************************
-* | File        :   LCD_1in69.c
-* | Author      :   Waveshare team
-* | Function    :   Hardware underlying interface
-* | Info        :   Used to shield the underlying layers of each master and enhance portability
-*----------------
-* | This version:   V1.0
-* | Date        :   2023-03-09
-* | Info        :   Basic version
- *
- ******************************************************************************/
 #include "LCD_1in69.h"
 #include "DEV_Config.h"
 
 #include <stdlib.h> //itoa()
 #include <stdio.h>
 
-LCD_1IN69_ATTRIBUTES LCD_1IN69;
-
-/******************************************************************************
-function :  Hardware reset
-parameter:
-******************************************************************************/
 static void LCD_1IN69_Reset(void)
 {
     LCD_1IN69_RST_1;
@@ -31,11 +14,6 @@ static void LCD_1IN69_Reset(void)
     DEV_Delay_ms(100);
 }
 
-/******************************************************************************
-function :  send command
-parameter:
-     Reg : Command register
-******************************************************************************/
 static void LCD_1IN69_SendCommand(UBYTE Reg)
 {
     LCD_1IN69_DC_0;
@@ -162,28 +140,13 @@ static void LCD_1IN69_InitReg(void)
     LCD_1IN69_SendCommand(0x29);
 }
 
-/********************************************************************************
-function:   Set the resolution and scanning method of the screen
-parameter:
-        Scan_dir:   Scan direction
-********************************************************************************/
 static void LCD_1IN69_SetAttributes(UBYTE Scan_dir)
 {
     // Get the screen scan direction
-    LCD_1IN69.SCAN_DIR = Scan_dir;
     UBYTE MemoryAccessReg = 0x00;
 
-    // Get GRAM and LCD width and height
-    if (Scan_dir == HORIZONTAL) {
-        LCD_1IN69.HEIGHT = LCD_1IN69_WIDTH;
-        LCD_1IN69.WIDTH = LCD_1IN69_HEIGHT;
-        MemoryAccessReg = 0X70;
-    }
-    else {
-        LCD_1IN69.HEIGHT = LCD_1IN69_HEIGHT;
-        LCD_1IN69.WIDTH = LCD_1IN69_WIDTH;      
-        MemoryAccessReg = 0X00;
-    }
+    // Get GRAM and LCD width and height   
+    MemoryAccessReg = 0X00; // Scan dir is always vertical.
 
     // Set the read / write scan direction of the frame memory
     LCD_1IN69_SendCommand(0x36); // MX, MY, RGB mode
@@ -216,36 +179,21 @@ parameter:
 ********************************************************************************/
 void LCD_1IN69_SetWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
 {    
-    if (LCD_1IN69.SCAN_DIR == VERTICAL) { 
-        // set the X coordinates
-        LCD_1IN69_SendCommand(0x2A);
-        LCD_1IN69_SendData_8Bit(Xstart >> 8);
-        LCD_1IN69_SendData_8Bit(Xstart);
-        LCD_1IN69_SendData_8Bit((Xend-1) >> 8);
-        LCD_1IN69_SendData_8Bit(Xend-1);
+    // Scan dir is always vertical
+    // set the X coordinates
+    LCD_1IN69_SendCommand(0x2A);
+    LCD_1IN69_SendData_8Bit(Xstart >> 8);
+    LCD_1IN69_SendData_8Bit(Xstart);
+    LCD_1IN69_SendData_8Bit((Xend-1) >> 8);
+    LCD_1IN69_SendData_8Bit(Xend-1);
 
-        // set the Y coordinates
-        LCD_1IN69_SendCommand(0x2B);
-        LCD_1IN69_SendData_8Bit((Ystart+20) >> 8);
-        LCD_1IN69_SendData_8Bit(Ystart+20);
-        LCD_1IN69_SendData_8Bit((Yend+20-1) >> 8);
-        LCD_1IN69_SendData_8Bit(Yend+20-1);
-    }
-    else { 
-        // set the X coordinates
-        LCD_1IN69_SendCommand(0x2A);
-        LCD_1IN69_SendData_8Bit((Xstart+20) >> 8);
-        LCD_1IN69_SendData_8Bit(Xstart+20);
-        LCD_1IN69_SendData_8Bit((Xend+20-1) >> 8);
-        LCD_1IN69_SendData_8Bit(Xend+20-1);
-
-        // set the Y coordinates
-        LCD_1IN69_SendCommand(0x2B);
-        LCD_1IN69_SendData_8Bit(Ystart >> 8);
-        LCD_1IN69_SendData_8Bit(Ystart);
-        LCD_1IN69_SendData_8Bit((Yend-1) >> 8);
-        LCD_1IN69_SendData_8Bit(Yend-1);
-    }
+    // set the Y coordinates
+    LCD_1IN69_SendCommand(0x2B);
+    LCD_1IN69_SendData_8Bit((Ystart+20) >> 8);
+    LCD_1IN69_SendData_8Bit(Ystart+20);
+    LCD_1IN69_SendData_8Bit((Yend+20-1) >> 8);
+    LCD_1IN69_SendData_8Bit(Yend+20-1);
+    
     LCD_1IN69_SendCommand(0x2C);   
 }
 
@@ -261,10 +209,10 @@ void LCD_1IN69_Clear(UWORD Color)
         Image[j] = Color;
     }
 
-    LCD_1IN69_SetWindows(0, 0, LCD_1IN69.WIDTH, LCD_1IN69.HEIGHT);
+    LCD_1IN69_SetWindows(0, 0, LCD_1IN69_WIDTH, LCD_1IN69_HEIGHT);
     LCD_1IN69_DC_1;
-    for (j=0; j<LCD_1IN69.HEIGHT; j++) {
-        DEV_SPI_Write_nByte((uint8_t *)&Image, LCD_1IN69.WIDTH * 2);
+    for (j=0; j<LCD_1IN69_HEIGHT; j++) {
+        DEV_SPI_Write_nByte((uint8_t *)&Image, LCD_1IN69_WIDTH * 2);
     }
 
 }
@@ -277,10 +225,10 @@ void LCD_1IN69_Display(UWORD *Image)
 {
     UWORD j;
     
-    LCD_1IN69_SetWindows(0, 0, LCD_1IN69.WIDTH, LCD_1IN69.HEIGHT);
+    LCD_1IN69_SetWindows(0, 0, LCD_1IN69_WIDTH, LCD_1IN69_HEIGHT);
     LCD_1IN69_DC_1;
-    for (j=0; j<LCD_1IN69.HEIGHT; j++) {
-        DEV_SPI_Write_nByte((uint8_t *)&Image[j * LCD_1IN69.WIDTH], LCD_1IN69.WIDTH * 2);
+    for (j=0; j<LCD_1IN69_HEIGHT; j++) {
+        DEV_SPI_Write_nByte((uint8_t *)&Image[j * LCD_1IN69_WIDTH], LCD_1IN69_WIDTH * 2);
     }
 }
 

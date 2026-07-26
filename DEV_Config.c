@@ -1,13 +1,4 @@
-/*****************************************************************************
-* | File      	:   DEV_Config.c
-* | Function    :   Hardware underlying interface
-* | Info        :   Rewritten for Raspberry Pi Pico 2 W (Freenove board).
-*                    The original bcm2835/wiringPi/DEV_LIB branches only ever
-*                    applied to a Linux Raspberry Pi and were empty no-ops on
-*                    the Pico - that was why nothing displayed. This version
-*                    uses the Pico SDK's own C GPIO/SPI functions directly,
-*                    so this file stays plain C with no Arduino/C++ headers.
-******************************************************************************/
+
 #include "DEV_Config.h"
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
@@ -22,9 +13,6 @@ void DEV_SetBacklight(UWORD Value)
     gpio_put(LCD_BL, Value > 0 ? 1 : 0);
 }
 
-/*****************************************
-                GPIO
-*****************************************/
 void DEV_Digital_Write(UWORD Pin, UBYTE Value)
 {
     gpio_put(Pin, Value ? 1 : 0);
@@ -41,9 +29,6 @@ void DEV_GPIO_Mode(UWORD Pin, UWORD Mode)
     gpio_set_dir(Pin, Mode == 0 ? GPIO_IN : GPIO_OUT);
 }
 
-/**
- * delay x ms
-**/
 void DEV_Delay_ms(UDOUBLE xms)
 {
     sleep_ms(xms);
@@ -60,9 +45,6 @@ static void DEV_GPIO_Init(void)
     LCD_BL_1;
 }
 
-/******************************************************************************
-function:	Module Initialize, sets up GPIO pins and the SPI peripheral
-******************************************************************************/
 UBYTE DEV_ModuleInit(void)
 {
     DEV_GPIO_Init();
