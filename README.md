@@ -23,7 +23,7 @@ DC | GP22 |  Pin 29
 RST | GP13 (also SPI1CSn)  |  Pin 17
 BL | GP21 |  Pin 27
 
-The display uses SPI interface. You can set it up differently, but you need to check that the constants in DEV_Config.h refer to the right GPIO.
+The display uses SPI interface. You can set it up differently from how it's listed here, but you need to check that the constants in DEV_Config.h refer to the right GPIO.
 
 # Build
 The actual democode is all in one file, rpball.ino.
