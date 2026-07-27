@@ -30,4 +30,4 @@ The actual democode is all in one file, rpball.ino.
 
 The code is in C++, with some boilerplate pulled in based off of Raspberry Pi and WaveShare samples.
 
-The sketch is compiled and uploaded using Arduino IDE. Tested with Arduino 2.3.10.
+The sketch is compiled and uploaded using Arduino IDE. Tested with Arduino IDE 2.3.10.
