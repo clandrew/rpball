@@ -2,6 +2,7 @@
 This is a graphical demo which runs on:
 * Raspberry Pi Pico 2W, with
 * Waveshare 1.69" LCD display.
+* A pull-up resistor button
 
 # How It Looks
 
@@ -23,7 +24,15 @@ DC | GP22 |  Pin 29
 RST | GP13 (also SPI1CSn)  |  Pin 17
 BL | GP21 |  Pin 27
 
+Button pin | Raspberry Pi Pico 2W semantic pin | Raspberry Pi Pico 2W global pin
+--- | --- | --- 
+Button (red) | GP14 | Pin 19
+Button (black) | GND | Pin 18
+
 The display uses SPI interface. You can set it up differently from how it's listed here, but you need to check that the constants in DEV_Config.h refer to the right GPIO.
+
+# Controls
+Press the button to quickly oscillate the color of the ball. It will oscillate as long as the button is pressed.
 
 # Build
 The actual democode is all in one file, rpball.ino.
