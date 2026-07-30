@@ -7,6 +7,7 @@
 #define GREEN       0x001F
 #define BLUE        0xF800
 
+#define BUTTON1_PIN 14
 UWORD gStaging[LCD_1IN69_WIDTH * LCD_1IN69_HEIGHT ];
 const int ballDiam = 50;
 int ballX = 50;
@@ -15,10 +16,20 @@ int ballVX = 5;
 int ballVY = 5;
 int ballColorIndex = 0;
 
+void InitializeButton(uint gpio)
+{
+  // The buttons use pull-up resistors
+  gpio_init(gpio);
+  gpio_set_dir(gpio, GPIO_IN);
+  gpio_pull_up(gpio);
+}
+
 void setup() 
 {
   DEV_ModuleInit();
   LCD_1IN69_Init();
+
+  InitializeButton(BUTTON1_PIN);
 }
 
 static const UWORD colors[] = {RED, GREEN, BLUE };
@@ -110,5 +121,11 @@ void loop()
   MoveBall();
   DrawToStaging();
   CopyStagingToScreen();
+
+  if (!gpio_get(BUTTON1_PIN)) 
+  {
+      IncrementBallColor();
+  }
+  
   delay(50); // Wait this number of ms
 }
